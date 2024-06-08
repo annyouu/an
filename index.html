@@ -3,27 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>スロット</title>
-  <link rel="stylesheet" href="css/style.css">
+  <title>パスワードジェネレータ</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <main>
-    <!-- <section class="panel">
-      <img src="img/seven.png">
-      <div class="stop">STOP</div>
-    </section>
-    <section class="panel">
-      <img src="img/seven.png">
-      <div class="stop">STOP</div>
-    </section>
-    <section class="panel">
-      <img src="img/seven.png">
-      <div class="stop">STOP</div>
-    </section> -->
+    <p id="result"></p>
+
+    <button id="btn">パスワードを生成</button>
+
+    <fieldset>
+      <legend>オプション</legend>
+      <label>
+        長さ(<span id="password-length">8</span>)
+        <input type="range" id="slider" min="8" max="24" value="8">
+      </label>
+      <label>
+        数字
+        <input type="checkbox" id="numbers-checkbox">
+      </label>
+      <label>
+        記号
+        <input type="checkbox" id="symbols-checkbox">
+      </label>
+    </fieldset>
   </main>
 
-  <div id="spin">SPIN</div>
-
-  <script src="js/main.js"></script>
+  <script src="main.js"></script>
 </body>
 </html>
