@@ -3,32 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>パスワードジェネレータ</title>
+  <title>おみくじ</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <main>
-    <p id="result"></p>
+    <section>
+      <h1>今日の運勢</h1>
+      <p id="result">?</p>
+    </section>
 
-    <button id="btn">パスワードを生成</button>
-
-    <fieldset>
-      <legend>オプション</legend>
-      <label>
-        長さ(<span id="password-length">8</span>)
-        <input type="range" id="slider" min="8" max="24" value="8">
-      </label>
-      <label>
-        数字
-        <input type="checkbox" id="numbers-checkbox">
-      </label>
-      <label>
-        記号
-        <input type="checkbox" id="symbols-checkbox">
-      </label>
-    </fieldset>
+    <button id="btn">おみくじを引く</button>
   </main>
-
   <script src="main.js"></script>
 </body>
 </html>
