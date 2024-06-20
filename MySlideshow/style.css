@@ -1,0 +1,36 @@
+@charset "utf-8";
+
+main {
+  width: 256px;
+  margin: 0 auto;
+}
+
+img {
+  vertical-align: bottom;
+}
+
+.container {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+button {
+  all:unset;
+  width: 124px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box; /* 124px+2pxで126pxになってしまう box-sizingで124pxに収まるようにする*/
+  text-align: center;
+  padding: 4px 0;
+  cursor: pointer;
+}
+
+.thumbnail {
+  cursor: pointer;
+  opacity: 0.4;
+}
+
+.active {
+  opacity: 1;
+}
