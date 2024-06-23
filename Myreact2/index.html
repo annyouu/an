@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My React App</title>
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div id="container"></div>
+
+  <script type="text/babel">
+    'use strict';
+
+    {
+      const Menu = (props) => {
+        const decrement = () => {
+          // menuの個数を1減らしたいが、個数を管理しているのはAppコンポーネントなのでAppコンポーネント内で関数を作って実行する必要がある。
+          props.onDecrement(props.menuId);
+          //何番目を減らすかの情報を実引数で渡す
+        };
+
+        const increment = () => {
+          props.onIncrement(props.menuId);
+        };
+
+        return (
+          <li>
+            <button onClick={decrement}>-</button>
+            <button onClick={increment}>+</button>
+            {props.name} ({props.price}円 ✕ {props.count}個)
+          </li>
+        )
+      };
+      const App = () => {
+        const [counts, setCounts] = React.useState([0, 0, 0]);
+        const menus = [
+          { id: 0, name: '牛丼', price: 400 },
+          { id: 1, name: 'カレー', price: 500 },
+          { id: 2, name: 'サラダ', price: 300 },
+        ];
+
+        // const total = 
+        // (menus[0].price * counts[0]) + 
+        // (menus[1].price * counts[1]) + 
+        // (menus[2].price * counts[2]);
+
+        let total = 0;
+        for (let i = 0; i < 3; i++) {
+          total += (menus[i].price * counts[i]);
+        }
+
+        const decrementMenu = (menuId) => {
+          if (counts[menuId] > 0) {
+            const newCounts = [...counts];
+            newCounts[menuId]--;
+            setCounts(newCounts); //更新
+          }
+        };
+
+        const incrementMenu = (menuId) => {
+          const newCounts = [...counts];
+          newCounts[menuId]++;
+          setCounts(newCounts); //更新
+        };
+
+        const menuItems = menus.map((menu) => {
+          return (
+            <Menu
+              key={menu.id}
+              menuId={menu.id}
+              count={counts[menu.id]}
+              name={menu.name}
+              price={menu.price}
+              onDecrement={decrementMenu}
+              onIncrement={incrementMenu}
+            />
+          );
+        });
+        return (
+          <>
+            <h1>メニュー</h1>
+            <ul className="menus">
+              {menuItems}
+            </ul>
+            <p>合計: {total}円</p>
+          </>
+        );
+      }
+      const container = document.querySelector('#container');
+      const root = ReactDOM.createRoot(container);
+      root.render(
+        // React.createElement('h1',null,'メニュー')
+        <App />
+      );
+    }
+  </script>
+</body>
+
+</html>
