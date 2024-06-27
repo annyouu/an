@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Todos</title>
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="container" id="root">
+
+  </div>
+
+  <script type="text/babel">
+    'use strict';
+
+    {
+      const Todo = (props) => {
+        const handleDeleteClick = () => {
+          props.onDeleteClick(props.todo.id);
+        };
+
+        const handleCheckboxChange = () => {
+          props.onCheckboxChange(props.todo.id);
+        };
+
+        return (
+          <li>
+            <label>
+              <input
+                type="checkbox"
+                checked={props.todo.isCompleted}
+                onChange={handleCheckboxChange}
+              />
+              <span>{props.todo.title}</span>
+            </label>
+            <button onClick={handleDeleteClick}>Del</button>
+          </li>
+        );
+      }
+
+      //57行目のprops.onSubmitのsubmit Addformコンポーネントの方でpropsを介して呼び出している
+
+      const AddForm = (props) => {
+        const [title, setTitle] = React.useState('');
+        const inputRef = React.useRef(null); //input要素を参照
+
+        const handleTextChange = (e) => {
+          setTitle(e.currentTarget.value);
+        };
+
+        const handleSubmit = (e) => {
+          e.preventDefault();
+          props.onSubmit(title);
+          setTitle('');
+          inputRef.current.focus();
+        };
+
+        //63行目のOnSubmitこのform要素にonSumbitを指定するときhandleSubmitの関数を呼び出してください この2つのonSubmitは別物
+
+        return (
+          <form onSubmit={handleSubmit}>
+            <input
+              type="text"
+              value={title}
+              onChange={handleTextChange}
+              ref={inputRef}
+            />
+            <button>Add</button>
+          </form>
+        );
+      }
+
+      //todosに新しい配列をいれた後setTodosに渡せばよい
+
+      const App = () => {
+        const [todos, setTodos] = React.useState([]);  //約束事 後に発動する
+
+        React.useEffect(() => {
+          let savedTodos;
+          if (localStorage.getItem('todos') === null) {
+            savedTodos = [];
+          } else {
+            savedTodos = JSON.parse(localStorage.getItem('todos'));
+          }
+          setTodos(savedTodos);
+        }, []);
+
+        const updateTodos = (newTodos) => {
+          setTodos(newTodos);
+          localStorage.setItem('todos', JSON.stringify(newTodos));
+        };
+
+        //localStorageのsetItemとして
+
+        const handlePurgeClick = () => {
+          if (!confirm('Sure?')) {
+            return;
+          }
+          const newTodos = todos.filter((todo) => {
+            return todo.isCompleted === false;
+          });
+          updateTodos(newTodos);
+        };
+
+        const handleAddFormSubmit = (title) => {
+          const newTodos = [...todos];
+          newTodos.push({
+            id: Date.now(),
+            title: title,
+            isCompleted: false,
+          });
+          updateTodos(newTodos);
+        };
+
+        const handleTodoCheckboxChange = (todoId) => {
+          const newTodos = todos.map((todo) => {
+            return {
+              id: todo.id,
+              title: todo.title,
+              isCompleted: todo.id === todoId ? !todo.isCompleted : todo.isCompleted
+            };
+          });
+          updateTodos(newTodos);
+        };
+
+        //このtodoIdは消したいものが渡されると考えて
+        //このtodoIdとは異なるものを集めて新しく配列を作れば結果として消したいものは配列に入らないので消える
+        //
+        //filter 新しい配列newTodosに、todosから特定の条件で抽出したものをnewTodosに入れる これをsetTodosに渡せば、更新が行われる
+
+        const handleTodoDeleteClick = (todoId) => {
+          if (confirm('Sure?') === false) {
+            return;
+          }
+          const newTodos = todos.filter((todo) => {
+            return todo.id !== todoId;
+          });
+          updateTodos(newTodos);
+        };
+
+        const todoItems = todos.map((todo) => {
+          return (
+            <Todo
+              key={todo.id}
+              todo={todo}
+              onDeleteClick={handleTodoDeleteClick}
+              onCheckboxChange={handleTodoCheckboxChange}
+            />
+          )
+        });
+        return (
+          <>
+            <h1>
+              Todos
+              <button onClick={handlePurgeClick}>Purge</button>
+            </h1>
+            <ul id="todos">
+              {todoItems}
+            </ul>
+            <AddForm
+              onSubmit={handleAddFormSubmit}
+            />
+          </>
+        );
+      }
+      const root = ReactDOM.createRoot(document.querySelector('#root'));
+      root.render(
+        <App />
+      );
+    }
+  </script>
+</body>
+
+</html>
